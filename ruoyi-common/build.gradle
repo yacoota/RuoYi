@@ -1,0 +1,17 @@
+dependencies {
+    implementation "org.springframework:spring-context-support"
+    implementation "org.springframework:spring-web"
+    implementation "org.apache.shiro:shiro-core"
+    implementation "org.apache.shiro:shiro-ehcache"
+    implementation "com.github.pagehelper:pagehelper-spring-boot-starter"
+    implementation "javax.validation:validation-api"
+    implementation "org.apache.commons:commons-lang3"
+    implementation "com.fasterxml.jackson.core:jackson-databind"
+    implementation "com.alibaba:fastjson"
+    implementation "commons-io:commons-io"
+    implementation "commons-fileupload:commons-fileupload"
+    implementation "org.apache.poi:poi-ooxml"
+    implementation "org.yaml:snakeyaml"
+    implementation "javax.servlet:javax.servlet-api"
+
+}

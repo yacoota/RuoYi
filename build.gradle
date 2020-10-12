@@ -1,0 +1,115 @@
+group 'com.ruoyi'
+version '1.0.0'
+
+
+subprojects {
+    apply plugin: 'java'
+    apply plugin: 'maven'
+
+    sourceCompatibility = targetJavaVersion
+    targetCompatibility = targetJavaVersion
+
+    [compileJava, compileTestJava, javadoc]*.options*.encoding = 'UTF-8'
+
+    configurations {
+        all*.exclude group: 'commons-logging'
+        developmentOnly
+        runtimeClasspath {
+            extendsFrom developmentOnly
+        }
+        compileOnly {
+            extendsFrom annotationProcessor
+        }
+    }
+
+    ext {
+        shiro_version = "1.6.0"
+        thymeleaf_extras_shiro_version = "2.0.0"
+        mybatis_boot_version = "1.3.2"
+        druid_version = "1.1.22"
+        bitwalker_version = "1.19"
+        kaptcha_version = "2.3.2"
+        swagger_version = "2.9.2"
+        pagehelper_boot_version = "1.2.5"
+        fastjson_version = "1.2.73"
+        oshi_version = "5.2.5"
+        jna_version = "5.5.0"
+        commons_io_version = "2.5"
+        commons_fileupload_version = "1.3.3"
+        poi_version = "3.17"
+        velocity_version = "1.7"
+    }
+
+    dependencies {
+        implementation platform('org.springframework.boot:spring-boot-dependencies:2.1.17.RELEASE')
+
+        implementation "org.springframework.boot:spring-boot-starter"
+
+        implementation "com.alibaba:druid-spring-boot-starter:${druid_version}"
+        implementation "com.github.penggle:kaptcha:${kaptcha_version}"
+        implementation "org.apache.shiro:shiro-core:${shiro_version}"
+        implementation "org.apache.shiro:shiro-spring:${shiro_version}"
+        implementation "org.apache.shiro:shiro-ehcache:${shiro_version}"
+        implementation "com.github.theborakompanioni:thymeleaf-extras-shiro:${thymeleaf_extras_shiro_version}"
+        implementation "eu.bitwalker:UserAgentUtils:${bitwalker_version}"
+        implementation "com.github.pagehelper:pagehelper-spring-boot-starter:${pagehelper_boot_version}"
+        implementation "com.github.oshi:oshi-core:${oshi_version}"
+        implementation "net.java.dev.jna:jna"
+        implementation "net.java.dev.jna:jna-platform"
+        implementation "commons-io:commons-io:${commons_io_version}"
+        implementation "commons-fileupload:commons-fileupload:${commons_fileupload_version}"
+        implementation "org.apache.poi:poi-ooxml:${poi_version}"
+        implementation "org.apache.velocity:velocity:${velocity_version}"
+        implementation "com.alibaba:fastjson:${fastjson_version}"
+
+        implementation("io.springfox:springfox-swagger2:${swagger_version}") {
+            exclude group: "io.swagger", module: "swagger-annotations"
+            exclude group: "io.swagger", module: "swagger-models"
+        }
+        implementation "io.springfox:springfox-swagger-ui:${swagger_version}"
+
+
+        implementation "org.apache.commons:commons-lang3"
+
+
+        compileOnly "org.projectlombok:lombok:1.18.12"
+        annotationProcessor "org.projectlombok:lombok:1.18.12"
+
+        //compile project(':ruoyi-common')
+        //compile project(':ruoyi-generator')
+        //compile project(':ruoyi-framework')
+        //compile project(':ruoyi-quartz')
+        //compile project(':ruoyi-system')
+
+    }
+
+    sourceSets {
+        main {
+            java {
+                srcDir 'src/main/java'
+            }
+            resources {
+                srcDir 'src/main/resources'
+            }
+        }
+    }
+
+    jar {
+        manifest {
+            attributes("provider": "Gradle")
+        }
+    }
+}
+
+allprojects {
+    repositories {
+        mavenLocal()
+        mavenCentral()
+        maven { url "http://maven.aliyun.com/nexus/content/groups/public"}
+    }
+    defaultTasks 'clean', 'build', 'assemble'
+}
+
+
+
+

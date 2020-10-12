@@ -1,0 +1,8 @@
+rootProject.name = 'RuoYi'
+include 'ruoyi-common'
+// include 'ruoyi-generator'
+include 'ruoyi-framework'
+include 'ruoyi-quartz'
+include 'ruoyi-system'
+include 'ruoyi-admin'
+
