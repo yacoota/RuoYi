@@ -6,6 +6,7 @@ import org.springframework.util.StringUtils;
 import com.ruoyi.common.constant.Constants;
 import com.ruoyi.common.constant.ShiroConstants;
 import com.ruoyi.common.constant.UserConstants;
+import com.ruoyi.common.core.domain.entity.SysUser;
 import com.ruoyi.common.enums.UserStatus;
 import com.ruoyi.common.exception.user.CaptchaException;
 import com.ruoyi.common.exception.user.UserBlockedException;
@@ -15,10 +16,9 @@ import com.ruoyi.common.exception.user.UserPasswordNotMatchException;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.MessageUtils;
 import com.ruoyi.common.utils.ServletUtils;
+import com.ruoyi.common.utils.ShiroUtils;
 import com.ruoyi.framework.manager.AsyncManager;
 import com.ruoyi.framework.manager.factory.AsyncFactory;
-import com.ruoyi.framework.util.ShiroUtils;
-import com.ruoyi.system.domain.SysUser;
 import com.ruoyi.system.service.ISysUserService;
 
 /**
@@ -41,7 +41,7 @@ public class SysLoginService
     public SysUser login(String username, String password)
     {
         // 验证码校验
-        if (!StringUtils.isEmpty(ServletUtils.getRequest().getAttribute(ShiroConstants.CURRENT_CAPTCHA)))
+        if (ShiroConstants.CAPTCHA_ERROR.equals(ServletUtils.getRequest().getAttribute(ShiroConstants.CURRENT_CAPTCHA)))
         {
             AsyncManager.me().execute(AsyncFactory.recordLogininfor(username, Constants.LOGIN_FAIL, MessageUtils.message("user.jcaptcha.error")));
             throw new CaptchaException();

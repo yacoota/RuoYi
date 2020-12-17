@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -19,7 +18,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
-import org.apache.poi.hssf.usermodel.HSSFDateUtil;
 import org.apache.poi.ss.usermodel.BorderStyle;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
@@ -46,14 +44,14 @@ import com.ruoyi.common.annotation.Excel;
 import com.ruoyi.common.annotation.Excel.ColumnType;
 import com.ruoyi.common.annotation.Excel.Type;
 import com.ruoyi.common.annotation.Excels;
-import com.ruoyi.common.config.Global;
+import com.ruoyi.common.config.RuoYiConfig;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.text.Convert;
 import com.ruoyi.common.exception.BusinessException;
 import com.ruoyi.common.utils.DateUtils;
+import com.ruoyi.common.utils.DictUtils;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.reflect.ReflectUtils;
-import com.ruoyi.common.utils.spring.SpringUtils;
 
 /**
  * Excel相关处理
@@ -280,6 +278,10 @@ public class ExcelUtil<T>
                             val = DateUtil.getJavaDate((Double) val);
                         }
                     }
+                    else if (Boolean.TYPE == fieldType || Boolean.class == fieldType)
+                    {
+                        val = Convert.toBool(val, false);
+                    }
                     if (StringUtils.isNotNull(fieldType))
                     {
                         Excel attr = field.getAnnotation(Excel.class);
@@ -475,6 +477,21 @@ public class ExcelUtil<T>
         style.setFont(totalFont);
         styles.put("total", style);
 
+        style = wb.createCellStyle();
+        style.cloneStyleFrom(styles.get("data"));
+        style.setAlignment(HorizontalAlignment.LEFT);
+        styles.put("data1", style);
+
+        style = wb.createCellStyle();
+        style.cloneStyleFrom(styles.get("data"));
+        style.setAlignment(HorizontalAlignment.CENTER);
+        styles.put("data2", style);
+
+        style = wb.createCellStyle();
+        style.cloneStyleFrom(styles.get("data"));
+        style.setAlignment(HorizontalAlignment.RIGHT);
+        styles.put("data3", style);
+
         return styles;
     }
 
@@ -503,12 +520,10 @@ public class ExcelUtil<T>
     {
         if (ColumnType.STRING == attr.cellType())
         {
-            cell.setCellType(CellType.STRING);
             cell.setCellValue(StringUtils.isNull(value) ? attr.defaultValue() : value + attr.suffix());
         }
         else if (ColumnType.NUMERIC == attr.cellType())
         {
-            cell.setCellType(CellType.NUMERIC);
             cell.setCellValue(StringUtils.contains(Convert.toStr(value), ".") ? Convert.toDouble(value) : Convert.toInt(value));
         }
     }
@@ -557,7 +572,8 @@ public class ExcelUtil<T>
             {
                 // 创建cell
                 cell = row.createCell(column);
-                cell.setCellStyle(styles.get("data"));
+                int align = attr.align().value();
+                cell.setCellStyle(styles.get("data" + (align >= 1 && align <= 3 ? align : "")));
 
                 // 用于读取对象中的属性
                 Object value = getTargetValue(vo, field, attr);
@@ -746,10 +762,7 @@ public class ExcelUtil<T>
      */
     public static String convertDictByExp(String dictValue, String dictType, String separator) throws Exception
     {
-        Object bean = SpringUtils.getBean("dictUtils");
-        String methodName = "getDictLabel";
-        Method method = bean.getClass().getDeclaredMethod(methodName, String.class, String.class, String.class);
-        return Convert.toStr(method.invoke(bean, dictType, dictValue, separator));
+        return DictUtils.getDictLabel(dictType, dictValue, separator);
     }
 
     /**
@@ -762,10 +775,7 @@ public class ExcelUtil<T>
      */
     public static String reverseDictByExp(String dictLabel, String dictType, String separator) throws Exception
     {
-        Object bean = SpringUtils.getBean("dictUtils");
-        String methodName = "getDictValue";
-        Method method = bean.getClass().getDeclaredMethod(methodName, String.class, String.class, String.class);
-        return Convert.toStr(method.invoke(bean, dictType, dictLabel, separator));
+        return DictUtils.getDictValue(dictType, dictLabel, separator);
     }
 
     /**
@@ -831,7 +841,7 @@ public class ExcelUtil<T>
      */
     public String getAbsoluteFile(String filename)
     {
-        String downloadPath = Global.getDownloadPath() + filename;
+        String downloadPath = RuoYiConfig.getDownloadPath() + filename;
         File desc = new File(downloadPath);
         if (!desc.getParentFile().exists())
         {
@@ -881,7 +891,7 @@ public class ExcelUtil<T>
      */
     private Object getValue(Object o, String name) throws Exception
     {
-        if (StringUtils.isNotEmpty(name))
+        if (StringUtils.isNotNull(o) && StringUtils.isNotEmpty(name))
         {
             Class<?> clazz = o.getClass();
             Field field = clazz.getDeclaredField(name);
@@ -981,10 +991,10 @@ public class ExcelUtil<T>
             Cell cell = row.getCell(column);
             if (StringUtils.isNotNull(cell))
             {
-                if (cell.getCellTypeEnum() == CellType.NUMERIC || cell.getCellTypeEnum() == CellType.FORMULA)
+                if (cell.getCellType() == CellType.NUMERIC || cell.getCellType() == CellType.FORMULA)
                 {
                     val = cell.getNumericCellValue();
-                    if (HSSFDateUtil.isCellDateFormatted(cell))
+                    if (DateUtil.isCellDateFormatted(cell))
                     {
                         val = DateUtil.getJavaDate((Double) val); // POI Excel 日期格式转换
                     }
@@ -1000,15 +1010,15 @@ public class ExcelUtil<T>
                         }
                     }
                 }
-                else if (cell.getCellTypeEnum() == CellType.STRING)
+                else if (cell.getCellType() == CellType.STRING)
                 {
                     val = cell.getStringCellValue();
                 }
-                else if (cell.getCellTypeEnum() == CellType.BOOLEAN)
+                else if (cell.getCellType() == CellType.BOOLEAN)
                 {
                     val = cell.getBooleanCellValue();
                 }
-                else if (cell.getCellTypeEnum() == CellType.ERROR)
+                else if (cell.getCellType() == CellType.ERROR)
                 {
                     val = cell.getErrorCellValue();
                 }

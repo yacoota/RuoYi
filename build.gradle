@@ -1,6 +1,7 @@
-group 'com.ruoyi'
-version '1.0.0'
+// https://gitee.com/y_project/RuoYi.git
 
+group 'com.ruoyi'
+version '4.5.1'
 
 subprojects {
     apply plugin: 'java'
@@ -23,25 +24,31 @@ subprojects {
     }
 
     ext {
-        shiro_version = "1.6.0"
+        shiro_version = "1.7.0"
         thymeleaf_extras_shiro_version = "2.0.0"
         mybatis_boot_version = "1.3.2"
-        druid_version = "1.1.22"
-        bitwalker_version = "1.19"
+        druid_version = "1.2.2"
+        bitwalker_version = "1.21"
         kaptcha_version = "2.3.2"
         swagger_version = "2.9.2"
-        pagehelper_boot_version = "1.2.5"
-        fastjson_version = "1.2.73"
-        oshi_version = "5.2.5"
-        jna_version = "5.5.0"
+        pagehelper_boot_version = "1.3.0"
+        fastjson_version = "1.2.74"
+        oshi_version = "5.3.6"
+        jna_version = "5.6.0"
         commons_io_version = "2.5"
         commons_fileupload_version = "1.3.3"
-        poi_version = "3.17"
+        poi_version = "4.1.2"
         velocity_version = "1.7"
     }
 
     dependencies {
-        implementation platform('org.springframework.boot:spring-boot-dependencies:2.1.17.RELEASE')
+        implementation platform('org.springframework.boot:spring-boot-dependencies')
+
+        constraints {
+            implementation("org.springframework.boot:spring-boot-dependencies:2.2.12.RELEASE") {
+                force = true
+            }
+        }
 
         implementation "org.springframework.boot:spring-boot-starter"
 
@@ -68,9 +75,7 @@ subprojects {
         }
         implementation "io.springfox:springfox-swagger-ui:${swagger_version}"
 
-
         implementation "org.apache.commons:commons-lang3"
-
 
         compileOnly "org.projectlombok:lombok:1.18.12"
         annotationProcessor "org.projectlombok:lombok:1.18.12"
@@ -80,7 +85,6 @@ subprojects {
         //compile project(':ruoyi-framework')
         //compile project(':ruoyi-quartz')
         //compile project(':ruoyi-system')
-
     }
 
     sourceSets {
