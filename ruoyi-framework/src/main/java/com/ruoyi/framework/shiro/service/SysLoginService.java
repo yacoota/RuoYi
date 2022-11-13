@@ -1,11 +1,13 @@
 package com.ruoyi.framework.shiro.service;
 
+import java.util.List;
+import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
 import com.ruoyi.common.constant.Constants;
 import com.ruoyi.common.constant.ShiroConstants;
 import com.ruoyi.common.constant.UserConstants;
+import com.ruoyi.common.core.domain.entity.SysRole;
 import com.ruoyi.common.core.domain.entity.SysUser;
 import com.ruoyi.common.enums.UserStatus;
 import com.ruoyi.common.exception.user.CaptchaException;
@@ -17,8 +19,10 @@ import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.MessageUtils;
 import com.ruoyi.common.utils.ServletUtils;
 import com.ruoyi.common.utils.ShiroUtils;
+import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.framework.manager.AsyncManager;
 import com.ruoyi.framework.manager.factory.AsyncFactory;
+import com.ruoyi.system.service.ISysMenuService;
 import com.ruoyi.system.service.ISysUserService;
 
 /**
@@ -34,6 +38,9 @@ public class SysLoginService
 
     @Autowired
     private ISysUserService userService;
+
+    @Autowired
+    private ISysMenuService menuService;
 
     /**
      * 登录
@@ -104,7 +111,8 @@ public class SysLoginService
         passwordService.validate(user, password);
 
         AsyncManager.me().execute(AsyncFactory.recordLogininfor(username, Constants.LOGIN_SUCCESS, MessageUtils.message("user.login.success")));
-        recordLoginInfo(user);
+        setRolePermission(user);
+        recordLoginInfo(user.getUserId());
         return user;
     }
 
@@ -129,10 +137,33 @@ public class SysLoginService
     */
 
     /**
-     * 记录登录信息
+     * 设置角色权限
+     *
+     * @param user 用户信息
      */
-    public void recordLoginInfo(SysUser user)
+    public void setRolePermission(SysUser user)
     {
+        List<SysRole> roles = user.getRoles();
+        if (!roles.isEmpty() && roles.size() > 1)
+        {
+            // 多角色设置permissions属性，以便数据权限匹配权限
+            for (SysRole role : roles)
+            {
+                Set<String> rolePerms = menuService.selectPermsByRoleId(role.getRoleId());
+                role.setPermissions(rolePerms);
+            }
+        }
+    }
+
+    /**
+     * 记录登录信息
+     *
+     * @param userId 用户ID
+     */
+    public void recordLoginInfo(Long userId)
+    {
+        SysUser user = new SysUser();
+        user.setUserId(userId);
         user.setLoginIp(ShiroUtils.getIp());
         user.setLoginDate(DateUtils.getNowDate());
         userService.updateUserInfo(user);

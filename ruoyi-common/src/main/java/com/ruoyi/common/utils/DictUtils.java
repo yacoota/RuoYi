@@ -40,8 +40,7 @@ public class DictUtils
         Object cacheObj = CacheUtils.get(getCacheName(), getCacheKey(key));
         if (StringUtils.isNotNull(cacheObj))
         {
-            List<SysDictData> DictDatas = StringUtils.cast(cacheObj);
-            return DictDatas;
+            return StringUtils.cast(cacheObj);
         }
         return null;
     }
@@ -83,7 +82,7 @@ public class DictUtils
         StringBuilder propertyString = new StringBuilder();
         List<SysDictData> datas = getDictCache(dictType);
 
-        if (StringUtils.containsAny(separator, dictValue) && StringUtils.isNotEmpty(datas))
+        if (StringUtils.containsAny(dictValue, separator) && StringUtils.isNotEmpty(datas))
         {
             for (SysDictData dict : datas)
             {
@@ -91,7 +90,7 @@ public class DictUtils
                 {
                     if (value.equals(dict.getDictValue()))
                     {
-                        propertyString.append(dict.getDictLabel() + separator);
+                        propertyString.append(dict.getDictLabel()).append(separator);
                         break;
                     }
                 }
@@ -123,7 +122,7 @@ public class DictUtils
         StringBuilder propertyString = new StringBuilder();
         List<SysDictData> datas = getDictCache(dictType);
 
-        if (StringUtils.containsAny(separator, dictLabel) && StringUtils.isNotEmpty(datas))
+        if (StringUtils.containsAny(dictLabel, separator) && StringUtils.isNotEmpty(datas))
         {
             for (SysDictData dict : datas)
             {
@@ -131,7 +130,7 @@ public class DictUtils
                 {
                     if (label.equals(dict.getDictLabel()))
                     {
-                        propertyString.append(dict.getDictValue() + separator);
+                        propertyString.append(dict.getDictValue()).append(separator);
                         break;
                     }
                 }
@@ -148,6 +147,16 @@ public class DictUtils
             }
         }
         return StringUtils.stripEnd(propertyString.toString(), separator);
+    }
+
+    /**
+     * 删除指定字典缓存
+     * 
+     * @param key 字典键
+     */
+    public static void removeDictCache(String key)
+    {
+        CacheUtils.remove(getCacheName(), getCacheKey(key));
     }
 
     /**

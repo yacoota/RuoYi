@@ -257,7 +257,7 @@
 	</section>
     <th:block th:include="include :: footer" />
     <th:block th:include="include :: select2-js" />
-    <th:block th:include="include :: bootstrap-table-reorder-js" />
+    <th:block th:include="include :: bootstrap-table-reorder-rows-js" />
     <script th:src="@{/js/jquery.tmpl.js}"></script>
     <th:block th:include="include :: jquery-cxselect-js" />
     <script th:inline="javascript">
@@ -289,6 +289,7 @@
 		$(function() {
 		    var options = {
 		        url: prefix + "/column/list",
+		        sidePagination: "client",
 		        sortName: "sort",
 		        sortOrder: "desc",
 		        height: $(window).height() - 166,
@@ -431,7 +432,7 @@
 		            title: '字典类型',
 		            width: "13%",
 		            formatter: function (value, row, index) {
-		        		var html = $.common.sprintf("<input class='form-control' type='text' name='columns[%s].dictType' value='%s' id='columns_dict_%s'>", index, value, row.columnId);
+		        		var html = $.common.sprintf("<input class='form-control' type='text' name='columns[%s].dictType' value='%s' id='columns_dict_%s'>", index, (value === undefined ? '' : value), row.columnId);
 		        		return "<div class='input-group'>" + html + "<span class='input-group-addon input-sm' onclick='selectDictTree(" + row.columnId + ", this)'><i class='fa fa-search'></i></span></div>";
 		        	},
 		        	cellStyle: function(value, row, index) {
@@ -494,6 +495,8 @@
 				$("#treeCode").select2("val", [""]);
 				$("#treeParentCode").select2("val", [""]);
 				$("#treeName").select2("val", [""]);
+				$("#subTableName").attr("required", "true");
+				$("#subTableFkName").attr("required", "true");
 				$("#otherInfo").addClass("hidden");
 			}
         }
@@ -540,18 +543,18 @@
 		}
 		
 		function doDictSubmit(index, layero){
-			var body = layer.getChildFrame('body', index);
+			var body = $.modal.getChildFrame(index);
    			var columnId = body.find('#columnId').val();
    			var dictType = body.find('#dictType').val();
-   			layer.close(index);
+   			$.modal.close(index);
    			$("#columns_dict_" + columnId).val(dictType);
 		}
 		
 		function doMenuSubmit(index, layero){
-			var body = layer.getChildFrame('body', index);
+			var body = $.modal.getChildFrame(index);
    			$("#parentMenuId").val(body.find('#treeId').val());
    			$("#parentMenuName").val(body.find('#treeName').val());
-   			layer.close(index);
+   			$.modal.close(index);
 		}
     </script>
 </body>

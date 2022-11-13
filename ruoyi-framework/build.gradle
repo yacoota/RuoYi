@@ -1,16 +1,12 @@
 dependencies {
-    compile project(':ruoyi-system')
     implementation "org.springframework.boot:spring-boot-starter-web"
     implementation "org.springframework.boot:spring-boot-starter-aop"
-
     implementation "com.alibaba:druid-spring-boot-starter"
     implementation("com.github.penggle:kaptcha") {
         exclude group: "javax.servlet-api", module: "javax.servlet"
     }
     implementation "org.apache.shiro:shiro-spring"
     implementation "com.github.theborakompanioni:thymeleaf-extras-shiro"
-    implementation "eu.bitwalker:UserAgentUtils"
     implementation "com.github.oshi:oshi-core"
 
-    implementation "org.apache.commons:commons-lang3"
 }

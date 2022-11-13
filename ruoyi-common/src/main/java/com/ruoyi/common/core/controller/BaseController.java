@@ -14,11 +14,14 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.domain.AjaxResult.Type;
+import com.ruoyi.common.core.domain.entity.SysUser;
 import com.ruoyi.common.core.page.PageDomain;
 import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.common.core.page.TableSupport;
 import com.ruoyi.common.utils.DateUtils;
+import com.ruoyi.common.utils.PageUtils;
 import com.ruoyi.common.utils.ServletUtils;
+import com.ruoyi.common.utils.ShiroUtils;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.sql.SqlUtil;
 
@@ -29,7 +32,7 @@ import com.ruoyi.common.utils.sql.SqlUtil;
  */
 public class BaseController
 {
-    protected final Logger logger = LoggerFactory.getLogger(BaseController.class);
+    protected final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     /**
      * 将前台传递过来的日期格式的字符串，自动转化为Date类型
@@ -53,14 +56,7 @@ public class BaseController
      */
     protected void startPage()
     {
-        PageDomain pageDomain = TableSupport.buildPageRequest();
-        Integer pageNum = pageDomain.getPageNum();
-        Integer pageSize = pageDomain.getPageSize();
-        if (StringUtils.isNotNull(pageNum) && StringUtils.isNotNull(pageSize))
-        {
-            String orderBy = SqlUtil.escapeOrderBySql(pageDomain.getOrderBy());
-            PageHelper.startPage(pageNum, pageSize, orderBy);
-        }
+        PageUtils.startPage();
     }
 
     /**
@@ -74,6 +70,14 @@ public class BaseController
             String orderBy = SqlUtil.escapeOrderBySql(pageDomain.getOrderBy());
             PageHelper.orderBy(orderBy);
         }
+    }
+
+    /**
+     * 清理分页的线程变量
+     */
+    protected void clearPage()
+    {
+        PageUtils.clearPage();
     }
 
     /**
@@ -160,6 +164,14 @@ public class BaseController
     }
 
     /**
+     * 返回成功数据
+     */
+    public static AjaxResult success(Object data)
+    {
+        return AjaxResult.success("操作成功", data);
+    }
+
+    /**
      * 返回失败消息
      */
     public AjaxResult error(String message)
@@ -181,5 +193,37 @@ public class BaseController
     public String redirect(String url)
     {
         return StringUtils.format("redirect:{}", url);
+    }
+
+    /**
+     * 获取用户缓存信息
+     */
+    public SysUser getSysUser()
+    {
+        return ShiroUtils.getSysUser();
+    }
+
+    /**
+     * 设置用户缓存信息
+     */
+    public void setSysUser(SysUser user)
+    {
+        ShiroUtils.setSysUser(user);
+    }
+
+    /**
+     * 获取登录用户id
+     */
+    public Long getUserId()
+    {
+        return getSysUser().getUserId();
+    }
+
+    /**
+     * 获取登录用户名
+     */
+    public String getLoginName()
+    {
+        return getSysUser().getLoginName();
     }
 }

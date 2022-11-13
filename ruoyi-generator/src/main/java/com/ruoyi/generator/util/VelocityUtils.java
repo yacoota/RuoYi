@@ -249,8 +249,7 @@ public class VelocityUtils
     public static String getPackagePrefix(String packageName)
     {
         int lastIndex = packageName.lastIndexOf(".");
-        String basePackage = StringUtils.substring(packageName, 0, lastIndex);
-        return basePackage;
+        return StringUtils.substring(packageName, 0, lastIndex);
     }
 
     /**
@@ -273,6 +272,7 @@ public class VelocityUtils
             if (!column.isSuperColumn() && GenConstants.TYPE_DATE.equals(column.getJavaType()))
             {
                 importList.add("java.util.Date");
+                importList.add("com.fasterxml.jackson.annotation.JsonFormat");
             }
             else if (!column.isSuperColumn() && GenConstants.TYPE_BIGDECIMAL.equals(column.getJavaType()))
             {
@@ -297,12 +297,13 @@ public class VelocityUtils
     /**
      * 获取上级菜单ID字段
      * 
-     * @param options 生成其他选项
+     * @param paramsObj 生成其他选项
      * @return 上级菜单ID字段
      */
     public static String getParentMenuId(JSONObject paramsObj)
     {
-        if (StringUtils.isNotEmpty(paramsObj) && paramsObj.containsKey(GenConstants.PARENT_MENU_ID))
+        if (StringUtils.isNotEmpty(paramsObj) && paramsObj.containsKey(GenConstants.PARENT_MENU_ID)
+                && StringUtils.isNotEmpty(paramsObj.getString(GenConstants.PARENT_MENU_ID)))
         {
             return paramsObj.getString(GenConstants.PARENT_MENU_ID);
         }
@@ -312,7 +313,7 @@ public class VelocityUtils
     /**
      * 获取树编码
      * 
-     * @param options 生成其他选项
+     * @param paramsObj 生成其他选项
      * @return 树编码
      */
     public static String getTreecode(JSONObject paramsObj)
@@ -327,7 +328,7 @@ public class VelocityUtils
     /**
      * 获取树父编码
      * 
-     * @param options 生成其他选项
+     * @param paramsObj 生成其他选项
      * @return 树父编码
      */
     public static String getTreeParentCode(JSONObject paramsObj)
@@ -342,7 +343,7 @@ public class VelocityUtils
     /**
      * 获取树名称
      * 
-     * @param options 生成其他选项
+     * @param paramsObj 生成其他选项
      * @return 树名称
      */
     public static String getTreeName(JSONObject paramsObj)

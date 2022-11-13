@@ -21,7 +21,7 @@ public interface ISysRoleService
     public List<SysRole> selectRoleList(SysRole role);
 
     /**
-     * 根据用户ID查询角色
+     * 根据用户ID查询角色列表
      * 
      * @param userId 用户ID
      * @return 权限列表
@@ -29,7 +29,7 @@ public interface ISysRoleService
     public Set<String> selectRoleKeys(Long userId);
 
     /**
-     * 根据用户ID查询角色
+     * 根据用户ID查询角色权限
      * 
      * @param userId 用户ID
      * @return 角色列表
@@ -114,6 +114,13 @@ public interface ISysRoleService
      * @param role 角色信息
      */
     public void checkRoleAllowed(SysRole role);
+
+    /**
+     * 校验角色是否有数据权限
+     * 
+     * @param roleId 角色id
+     */
+    public void checkRoleDataScope(Long roleId);
 
     /**
      * 通过角色ID查询角色使用数量

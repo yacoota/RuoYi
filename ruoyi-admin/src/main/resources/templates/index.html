@@ -11,12 +11,12 @@
     <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet"/>
     <link th:href="@{/css/jquery.contextMenu.min.css}" rel="stylesheet"/>
     <link th:href="@{/css/font-awesome.min.css}" rel="stylesheet"/>
-    <link th:href="@{/css/animate.css}" rel="stylesheet"/>
-    <link th:href="@{/css/style.css}" rel="stylesheet"/>
+    <link th:href="@{/css/animate.min.css}" rel="stylesheet"/>
+    <link th:href="@{/css/style.min.css}" rel="stylesheet"/>
     <link th:href="@{/css/skins.css}" rel="stylesheet"/>
-    <link th:href="@{/ruoyi/css/ry-ui.css?v=4.5.1}" rel="stylesheet"/>
+    <link th:href="@{/ruoyi/css/ry-ui.css?v=4.7.5}" rel="stylesheet"/>
 </head>
-<body class="fixed-sidebar full-height-layout gray-bg" style="overflow: hidden">
+<body class="fixed-sidebar full-height-layout gray-bg" th:classappend="${isMobile} ? 'canvas-menu'" style="overflow: hidden">
 <div id="wrapper">
 
     <!--左侧导航开始-->
@@ -80,10 +80,13 @@
 								<li><a class="menuItem" th:href="@{/demo/form/grid}">栅格</a></li>
 								<li><a class="menuItem" th:href="@{/demo/form/select}">下拉框</a></li>
 								<li><a class="menuItem" th:href="@{/demo/form/timeline}">时间轴</a></li>
+								<li><a class="menuItem" th:href="@{/demo/form/progress_bars}">进度条</a></li>
 								<li><a class="menuItem" th:href="@{/demo/form/basic}">基本表单</a></li>
 								<li><a class="menuItem" th:href="@{/demo/form/cards}">卡片列表</a></li>
 								<li><a class="menuItem" th:href="@{/demo/form/jasny}">功能扩展</a></li>
 								<li><a class="menuItem" th:href="@{/demo/form/sortable}">拖动排序</a></li>
+								<li><a class="menuItem" th:href="@{/demo/form/invoice}">单据打印</a></li>
+								<li><a class="menuItem" th:href="@{/demo/form/labels_tips}">标签 & 提示</a></li>
 								<li><a class="menuItem" th:href="@{/demo/form/tabs_panels}">选项卡 & 面板</a></li>
 								<li><a class="menuItem" th:href="@{/demo/form/validate}">表单校验</a></li>
 								<li><a class="menuItem" th:href="@{/demo/form/wizard}">表单向导</a></li>
@@ -102,6 +105,7 @@
 								<li><a class="menuItem" th:href="@{/demo/table/footer}">数据汇总</a></li>
 								<li><a class="menuItem" th:href="@{/demo/table/groupHeader}">组合表头</a></li>
 								<li><a class="menuItem" th:href="@{/demo/table/export}">表格导出</a></li>
+								<li><a class="menuItem" th:href="@{/demo/table/exportSelected}">导出选择列</a></li>
 								<li><a class="menuItem" th:href="@{/demo/table/remember}">翻页记住选择</a></li>
 								<li><a class="menuItem" th:href="@{/demo/table/pageGo}">跳转至指定页</a></li>
 								<li><a class="menuItem" th:href="@{/demo/table/params}">自定义查询参数</a></li>
@@ -115,12 +119,16 @@
 								<li><a class="menuItem" th:href="@{/demo/table/child}">表格父子视图</a></li>
 								<li><a class="menuItem" th:href="@{/demo/table/image}">表格图片预览</a></li>
 								<li><a class="menuItem" th:href="@{/demo/table/curd}">动态增删改查</a></li>
-								<li><a class="menuItem" th:href="@{/demo/table/reorder}">表格拖拽操作</a></li>
+								<li><a class="menuItem" th:href="@{/demo/table/reorderRows}">表格行拖拽操作</a></li>
+								<li><a class="menuItem" th:href="@{/demo/table/reorderColumns}">表格列拖拽操作</a></li>
 								<li><a class="menuItem" th:href="@{/demo/table/resizable}">表格列宽拖动</a></li>
 								<li><a class="menuItem" th:href="@{/demo/table/editable}">表格行内编辑</a></li>
 								<li><a class="menuItem" th:href="@{/demo/table/subdata}">主子表提交</a></li>
 								<li><a class="menuItem" th:href="@{/demo/table/refresh}">表格自动刷新</a></li>
 								<li><a class="menuItem" th:href="@{/demo/table/print}">表格打印配置</a></li>
+								<li><a class="menuItem" th:href="@{/demo/table/dynamicColumns}">表格动态列</a></li>
+								<li><a class="menuItem" th:href="@{/demo/table/customView}">自定义视图分页</a></li>
+								<li><a class="menuItem" th:href="@{/demo/table/asynTree}">异步加载表格树</a></li>
 								<li><a class="menuItem" th:href="@{/demo/table/other}">表格其他操作</a></li>
 							</ul>
                         </li>
@@ -195,7 +203,7 @@
 						</a>
 						<ul class="dropdown-menu">
 							<li class="mt5">
-								<a th:href="@{/system/user/profile}" class="menuItem">
+								<a th:href="@{/system/user/profile}" class="menuItem noactive">
 								<i class="fa fa-user"></i> 个人中心</a>
 							</li>
 							<li>
@@ -220,7 +228,7 @@
                 </ul>
             </nav>
         </div>
-        <div class="row content-tabs">
+        <div class="row content-tabs" th:classappend="${#bools.isFalse(tagsView)} ? |hide|">
             <button class="roll-nav roll-left tabLeft">
                 <i class="fa fa-backward"></i>
             </button>
@@ -237,12 +245,12 @@
 
         <a id="ax_close_max" class="ax_close_max" href="#" title="关闭全屏"> <i class="fa fa-times-circle-o"></i> </a>
 
-        <div class="row mainContent" id="content-main" th:style="${#bools.isFalse(ignoreFooter)} ? |height: calc(100% - 91px)|">
+        <div class="row mainContent" id="content-main" th:classappend="${mainClass}">
             <iframe class="RuoYi_iframe" name="iframe0" width="100%" height="100%" th:data-id="@{/system/main}"
-                    th:src="@{/system/main}" frameborder="0" seamless></iframe>
+                th:src="@{/system/main}" frameborder="0" seamless></iframe>
         </div>
-        
-        <div th:if="${ignoreFooter}" class="footer">
+
+        <div th:if="${footer}" class="footer">
             <div class="pull-right">© [[${copyrightYear}]] RuoYi Copyright </div>
         </div>
     </div>
@@ -256,8 +264,8 @@
 <script th:src="@{/js/jquery.contextMenu.min.js}"></script>
 <script th:src="@{/ajax/libs/blockUI/jquery.blockUI.js}"></script>
 <script th:src="@{/ajax/libs/layer/layer.min.js}"></script>
-<script th:src="@{/ruoyi/js/ry-ui.js?v=4.5.1}"></script>
-<script th:src="@{/ruoyi/js/common.js?v=4.5.1}"></script>
+<script th:src="@{/ruoyi/js/ry-ui.js?v=4.7.5}"></script>
+<script th:src="@{/ruoyi/js/common.js?v=4.7.5}"></script>
 <script th:src="@{/ruoyi/index.js?v=20201208}"></script>
 <script th:src="@{/ajax/libs/fullscreen/jquery.fullscreen.js}"></script>
 <script th:inline="javascript">
@@ -318,11 +326,15 @@ function applyPath(url) {
 }
 
 $(function() {
+	var lockPath = storage.get('lockPath');
 	if($.common.equals("history", mode) && window.performance.navigation.type == 1) {
 		var url = storage.get('publicPath');
 	    if ($.common.isNotEmpty(url)) {
 	    	applyPath(url);
 	    }
+	} else if($.common.isNotEmpty(lockPath)) {
+	    applyPath(lockPath);
+	    storage.remove('lockPath');
 	} else {
 		var hash = location.hash;
 	    if ($.common.isNotEmpty(hash)) {

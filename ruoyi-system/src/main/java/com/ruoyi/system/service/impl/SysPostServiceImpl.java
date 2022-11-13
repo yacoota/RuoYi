@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.common.constant.UserConstants;
 import com.ruoyi.common.core.text.Convert;
-import com.ruoyi.common.exception.BusinessException;
+import com.ruoyi.common.exception.ServiceException;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.system.domain.SysPost;
 import com.ruoyi.system.mapper.SysPostMapper;
@@ -90,10 +90,10 @@ public class SysPostServiceImpl implements ISysPostService
      * 批量删除岗位信息
      * 
      * @param ids 需要删除的数据ID
-     * @throws Exception
+     * @return 结果
      */
     @Override
-    public int deletePostByIds(String ids) throws BusinessException
+    public int deletePostByIds(String ids)
     {
         Long[] postIds = Convert.toLongArray(ids);
         for (Long postId : postIds)
@@ -101,7 +101,7 @@ public class SysPostServiceImpl implements ISysPostService
             SysPost post = selectPostById(postId);
             if (countUserPostById(postId) > 0)
             {
-                throw new BusinessException(String.format("%1$s已分配,不能删除", post.getPostName()));
+                throw new ServiceException(String.format("%1$s已分配,不能删除", post.getPostName()));
             }
         }
         return postMapper.deletePostByIds(postIds);

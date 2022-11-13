@@ -8,12 +8,11 @@
     <link rel="shortcut icon" href="favicon.ico">
     <link href="../static/css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}" rel="stylesheet"/>
     <link href="../static/css/font-awesome.min.css" th:href="@{/css/font-awesome.min.css}" rel="stylesheet"/>
-    <link href="../static/css/main/animate.min.css" th:href="@{/css/main/animate.min.css}" rel="stylesheet"/>
-    <link href="../static/css/main/style.min862f.css" th:href="@{/css/main/style.min862f.css}" rel="stylesheet"/>
+    <link href="../static/css/style.min.css" th:href="@{/css/style.min.css}" rel="stylesheet"/>
 </head>
 
 <body class="gray-bg">
-    <div class="row  border-bottom white-bg dashboard-header">
+    <div class="row border-bottom white-bg dashboard-header">
         <div class="col-sm-12">
             <blockquote class="text-warning" style="font-size:14px">
                                            领取阿里云通用云产品1888优惠券
@@ -80,7 +79,7 @@
                     <div class="ibox-content">
                         <p><i class="fa fa-send-o"></i> 官网：<a href="http://www.ruoyi.vip" target="_blank">http://www.ruoyi.vip</a>
                         </p>
-                        <p><i class="fa fa-qq"></i> QQ群：<s>满1389287</s> <s>满1679294</s> <s>满1529866</s> <s>满1772718</s> <s>满1366522</s> <s>满1382251</s> <s>满1145125</s> <s>满86752435</s> <s>满134072510</s> <s>满210336300</s> <s>满339522636</s> <a href="https://jq.qq.com/?_wv=1027&k=qPIKBb7s" target="_blank">130035985</a> 
+                        <p><i class="fa fa-qq"></i> QQ群：<s>满1389287</s> <s>满1679294</s> <s>满1529866</s> <s>满1772718</s> <s>满1366522</s> <s>满1382251</s> <s>满1145125</s> <s>满86752435</s> <s>满134072510</s> <s>满210336300</s> <s>满339522636</s> <s>满130035985</s> <s>满143151071</s> <s>满158781320</s> <s>满201531282</s> <s>满101526938</s> <s>满264355400</s> <s>满298522656</s> <s>满139845794</s> <s>满213650505</s> <a href="https://jq.qq.com/?_wv=1027&k=Cqd66IKe" target="_blank">185760789</a> 
                         </p>
                         <p><i class="fa fa-weixin"></i> 微信：<a href="javascript:;">/ *若依</a>
                         </p>
@@ -100,10 +99,428 @@
                             <div class="panel panel-default">
 								<div class="panel-heading">
 								   <h5 class="panel-title">
+									   <a data-toggle="collapse" data-parent="#version" href="#v475">v4.7.5</a><code class="pull-right">2022.09.05</code>
+								   </h5>
+								</div>
+								<div id="v475" class="panel-collapse collapse in">
+									<div class="panel-body">
+									   <ol>
+									        <li>Excel支持导出对象的子列表方法</li>
+									        <li>数据逻辑删除不进行唯一验证</li>
+									        <li>优化多角色数据权限匹配规则</li>
+									        <li>新增主子表提交校验示例</li>
+									        <li>支持自定义隐藏Excel属性列</li>
+									        <li>Excel注解支持backgroundColor属性设置背景颜色</li>
+									        <li>菜单配置刷新时Tab页签切换时刷新</li>
+									        <li>增加对AjaxResult消息结果类型的判断</li>
+									        <li>新增示例（进度条）</li>
+									        <li>新增内容编码/解码方便插件集成使用</li>
+									        <li>升级jquery到最新版3.6.1</li>
+									        <li>升级layui到最新版本2.7.5</li>
+									        <li>升级shiro到最新版本1.9.1</li>
+									        <li>升级druid到最新版本1.2.11</li>
+									        <li>升级pagehelper到最新版1.4.3</li>
+									        <li>升级oshi到最新版本6.2.2</li>
+									        <li>修复树表onLoadSuccess不生效的问题</li>
+											<li>修复用户分配角色大于默认页数丢失问题</li>
+									        <li>定时任务支持执行父类方法</li>
+									        <li>自动设置切换多个树表格实例配置</li>
+									        <li>页签创建标题优先data-title属性</li>
+									        <li>优化任务过期不执行调度</li>
+									        <li>优化横向菜单下激活菜单样式</li>
+									        <li>优化按钮打开窗口后按回车反复弹出</li>
+									        <li>优化excel/scale属性导出单元格数值类型</li>
+									        <li>优化druid开启wall过滤器出现的异常问题</li>
+									        <li>优化多个相同角色数据导致权限SQL重复问题</li>
+									        <li>其他细节优化</li>
+										</ol>
+									</div>
+								</div>
+							</div>
+                            <div class="panel panel-default">
+								<div class="panel-heading">
+								   <h5 class="panel-title">
+									   <a data-toggle="collapse" data-parent="#version" href="#v474">v4.7.4</a><code class="pull-right">2022.06.01</code>
+								   </h5>
+								</div>
+								<div id="v474" class="panel-collapse collapse">
+									<div class="panel-body">
+									   <ol>
+									        <li>用户头像上传图片格式限制</li>
+									        <li>Excel注解支持color属性设置字体颜色</li>
+									        <li>设置分页参数默认值</li>
+									        <li>主子表操作列新增单个删除</li>
+									        <li>定时任务检查Bean包名是否为白名单配置</li>
+									        <li>升级spring-boot到最新版本2.5.14</li>
+									        <li>升级shiro到最新版本1.9.0</li>
+									        <li>升级oshi到最新版本6.1.6</li>
+									        <li>升级fastjson到最新版1.2.83 安全修复版本</li>
+									        <li>文件上传兼容Weblogic环境</li>
+									        <li>新增清理分页的线程变量方法</li>
+									        <li>新增获取不带后缀文件名称方法</li>
+									        <li>用户缓存信息添加部门ancestors祖级列表</li>
+									        <li>自定义ShiroFilterFactoryBean防止中文请求被拦截</li>
+									        <li>字典类型必须以字母开头，且只能为（小写字母，数字，下滑线）</li>
+									        <li>优化IP地址获取到多个的问题</li>
+									        <li>优化表格冻结列阴影效果显示</li>
+									        <li>优化菜单侧边栏滚动条尺寸及颜色</li>
+									        <li>优化显示顺序orderNum类型为整型</li>
+									        <li>优化接口使用泛型使其看到响应属性字段</li>
+									        <li>优化导出数据LocalDateTime类型无数据问题</li>
+									        <li>修复导入Excel时字典字段类型为Long转义为空问题</li>
+									        <li>优化导出excel单元格验证,包含变更为开头.防止正常内容被替换</li>
+									        <li>修复URL类型回退键被禁止问题</li>
+									        <li>修复表格客户端分页序号显示错误问题</li>
+									        <li>修复代码生成拖拽多次出现的排序不正确问题</li>
+									        <li>修复表格打印组件不识别多层对象属性值问题</li>
+									        <li>修复操作日志查询类型条件为0时会查到所有数据</li>
+									        <li>修复Excel注解prompt/combo同时使用不生效问题</li>
+									        <li>修复初始化多表格处理回调函数时获取的表格配置不一致问题</li>
+									        <li>其他细节优化</li>
+										</ol>
+									</div>
+								</div>
+							</div>
+                            <div class="panel panel-default">
+								<div class="panel-heading">
+								   <h5 class="panel-title">
+									   <a data-toggle="collapse" data-parent="#version" href="#v473">v4.7.3</a><code class="pull-right">2022.03.01</code>
+								   </h5>
+								</div>
+								<div id="v473" class="panel-collapse collapse">
+									<div class="panel-body">
+									   <ol>
+									        <li>表格树支持分页/异步加载</li>
+									        <li>代码生成预览支持复制内容</li>
+									        <li>定时任务默认保存到内存中执行</li>
+									        <li>代码生成同步保留必填/类型选项</li>
+									        <li>页面若未匹配到字典标签则返回原字典值</li>
+									        <li>用户访问控制时校验数据权限，防止越权</li>
+									        <li>导出Excel时屏蔽公式，防止CSV注入风险</li>
+									        <li>升级spring-boot到最新版本2.5.10</li>
+									        <li>升级spring-boot-mybatis到最新版2.2.2</li>
+									        <li>升级pagehelper到最新版1.4.1</li>
+									        <li>升级oshi到最新版本6.1.2</li>
+									        <li>升级bootstrap-table到最新版本1.19.1</li>
+									        <li>服务监控新增运行参数信息显示</li>
+									        <li>定时任务目标字符串验证包名白名单</li>
+									        <li>文件上传接口新增原/新文件名返回参数</li>
+									        <li>定时任务屏蔽违规的字符</li>
+									        <li>分页数据新增分页参数合理化参数</li>
+									        <li>表格父子视图添加点击事件打开示例</li>
+									        <li>优化上传文件名称命名规则</li>
+									        <li>优化加载字典缓存数据</li>
+									        <li>优化任务队列满时任务拒绝策略</li>
+									        <li>优化IE11上传预览不显示的问题</li>
+									        <li>优化Excel格式化不同类型的日期对象</li>
+									        <li>优化国际化配置多余的zh请求问题</li>
+									        <li>优化新版Chrome浏览器回退出现的遮罩层</li>
+									        <li>修复EMAIL类型回退键被禁止问题</li>
+									        <li>修复Xss注解字段值为空时的异常问题</li>
+									        <li>其他细节优化</li>
+										</ol>
+									</div>
+								</div>
+							</div>
+                            <div class="panel panel-default">
+								<div class="panel-heading">
+								   <h5 class="panel-title">
+									   <a data-toggle="collapse" data-parent="#version" href="#v472">v4.7.2</a><code class="pull-right">2021.12.23</code>
+								   </h5>
+								</div>
+								<div id="v472" class="panel-collapse collapse">
+									<div class="panel-body">
+									   <ol>
+									        <li>自定义xss校验注解实现</li>
+									        <li>进入修改页面方法添加权限标识</li>
+									        <li>代码生成创建按钮添加超级管理员权限</li>
+									        <li>代码生成创建表检查关键字，防止注入风险</li>
+									        <li>修复定时任务多参数逗号分隔的问题</li>
+									        <li>修复表格插件一起使用出现的声明报错问题</li>
+									        <li>修复代码生成主子表模板删除方法缺少事务</li>
+									        <li>升级oshi到最新版本v5.8.6</li>
+									        <li>升级velocity到最新版本2.3</li>
+									        <li>升级fastjson到最新版1.2.79</li>
+									        <li>升级log4j2到最新版2.17.0 防止漏洞风险</li>
+									        <li>升级thymeleaf到最新版3.0.14 阻止远程代码执行漏洞</li>
+									        <li>优化修改/授权角色实时生效</li>
+									        <li>修整tomcat配置参数已过期问题</li>
+									        <li>前端添加单独的二代身份证校验</li>
+									        <li>优化新增部门时验证用户所属部门</li>
+									        <li>优化查询用户的角色组&岗位组代码</li>
+									        <li>请求分页方法设置成通用方便灵活调用</li>
+									        <li>优化日期类型错误提示与图标重叠问题</li>
+									        <li>其他细节优化</li>
+										</ol>
+									</div>
+								</div>
+							</div>
+                            <div class="panel panel-default">
+								<div class="panel-heading">
+								   <h5 class="panel-title">
+									   <a data-toggle="collapse" data-parent="#version" href="#v471">v4.7.1</a><code class="pull-right">2021.11.10</code>
+								   </h5>
+								</div>
+								<div id="v471" class="panel-collapse collapse">
+									<div class="panel-body">
+									   <ol>
+									        <li>新增是否开启页签功能</li>
+									        <li>代码生成的模块增加创建表功能</li>
+									        <li>Excel导入支持@Excels注解</li>
+									        <li>Excel注解支持导入导出标题信息</li>
+									        <li>Excel注解支持自定义数据处理器</li>
+									        <li>日志注解新增是否保存响应参数</li>
+									        <li>防重提交注解支持配置间隔时间/提示消息</li>
+									        <li>网页部分操作禁止使用后退键（Backspace）</li>
+									        <li>实例演示中增加多层窗口获取值</li>
+									        <li>弹出层openOptions增加动画属性</li>
+									        <li>升级spring-boot到最新版本2.5.6</li>
+									        <li>升级spring-boot-mybatis到最新版2.2.0</li>
+									        <li>升级pagehelper到最新版1.4.0</li>
+									        <li>升级oshi到最新版本v5.8.2</li>
+									        <li>升级druid到最新版1.2.8</li>
+									        <li>升级fastjson到最新版1.2.78</li>
+									        <li>升级thymeleaf-extras-shiro到最新版本v2.1.0</li>
+									        <li>升级bootstrap-fileinput到最新版本v5.2.4</li>
+									        <li>修改阿里云maven仓库地址为新版地址</li>
+									        <li>定时任务屏蔽违规字符</li>
+									        <li>增加sendGet无参请求方法</li>
+									        <li>代码生成去掉多余的排序字段</li>
+									        <li>优化启动脚本参数优化</li>
+									        <li>优化页签关闭右侧清除iframe元素</li>
+									        <li>优化多表格切换表单查询参数</li>
+									        <li>优化表格实例切换event不能为空</li>
+									        <li>优化mybatis全局默认的执行器</li>
+									        <li>优化导入Excel数据关闭时清理file</li>
+									        <li>优化Excel导入图片可能出现的异常</li>
+									        <li>优化记录登录信息，防止不必要的修改</li>
+									        <li>优化aop语法，使用spring自动注入注解</li>
+									        <li>修复无法被反转义问题</li>
+									        <li>修复拖拽行数据错位问题</li>
+									        <li>修复新窗口打开页面关闭弹窗报错</li>
+									        <li>修复富文本回退键被禁止&控制台报错问题</li>
+									        <li>修复自定义弹出层全屏参数无效问题</li>
+									        <li>修复树表代码生成短字段无法识别问题</li>
+									        <li>修复apple/webkit浏览器时间无法格式化</li>
+									        <li>修复后端主子表代码模板方法名生成错误问题</li>
+									        <li>修复swagger没有指定dataTypeClass导致启动出现warn日志</li>
+									        <li>其他细节优化</li>
+										</ol>
+									</div>
+								</div>
+							</div>
+                            <div class="panel panel-default">
+								<div class="panel-heading">
+								   <h5 class="panel-title">
+									   <a data-toggle="collapse" data-parent="#version" href="#v470">v4.7.0</a><code class="pull-right">2021.09.01</code>
+								   </h5>
+								</div>
+								<div id="v470" class="panel-collapse collapse">
+									<div class="panel-body">
+									   <ol>
+									        <li>优化弹出层显示在顶层窗口</li>
+									        <li>定时任务支持在线生成cron表达式</li>
+									        <li>Excel注解支持Image图片导入</li>
+									        <li>支持配置是否开启记住我功能</li>
+									        <li>修改时检查用户数据权限范围</li>
+									        <li>表单重置开始/结束时间控件</li>
+									        <li>新增多图上传示例</li>
+									        <li>启用父部门状态排除顶级节点</li>
+									        <li>富文本默认dialogsInBody属性</li>
+									        <li>去除默认分页合理化参数</li>
+									        <li>顶部菜单跳转添加绝对路径</li>
+									        <li>升级oshi到最新版本v5.8.0</li>
+									        <li>升级shiro到最新版本v1.8.0</li>
+									        <li>升级commons.io到最新版本v2.11.0</li>
+									        <li>升级jquery到最新版v3.6.0</li>
+									        <li>升级icheck到最新版v1.0.3</li>
+									        <li>升级layer到最新版本v3.5.1</li>
+									        <li>升级layui到最新版本v2.6.8</li>
+									        <li>升级laydate到最新版本v5.3.1</li>
+									        <li>升级select2到最新版v4.0.13</li>
+									        <li>升级cropper到最新版本v1.5.12</li>
+									        <li>升级summernote到最新版本v0.8.18</li>
+									        <li>升级duallistbox到最新版本v3.0.9</li>
+									        <li>升级jquery.validate到最新版本v1.19.3</li>
+									        <li>升级bootstrap-suggest到最新版本v0.1.29</li>
+									        <li>升级bootstrap-select到最新版本v1.13.18</li>
+									        <li>升级bootstrap-fileinput到最新版本v5.2.3</li>
+									        <li>查询表格指定列值增加是否去重属性</li>
+									        <li>删除sourceMappingURL源映射</li>
+									        <li>去除多余的favicon.ico引入</li>
+									        <li>优化代码生成模板</li>
+									        <li>优化XSS跨站脚本过滤</li>
+									        <li>补充定时任务表字段注释</li>
+									        <li>定时任务屏蔽ldap远程调用</li>
+									        <li>定时任务屏蔽http(s)远程调用</li>
+									        <li>定时任务对检查异常进行事务回滚</li>
+									        <li>调度日志详细页添加关闭按钮</li>
+									        <li>优化异常打印输出信息</li>
+									        <li>优化移动端进入首页样式</li>
+									        <li>优化用户操作不能删除自己</li>
+									        <li>默认开始/结束时间绑定控件选择类型</li>
+									        <li>其他细节优化</li>
+										</ol>
+									</div>
+								</div>
+							</div>
+                            <div class="panel panel-default">
+								<div class="panel-heading">
+								   <h5 class="panel-title">
+									   <a data-toggle="collapse" data-parent="#version" href="#v462">v4.6.2</a><code class="pull-right">2021.07.01</code>
+								   </h5>
+								</div>
+								<div id="v462" class="panel-collapse collapse">
+									<div class="panel-body">
+									   <ol>
+									        <li>优化参数&字典缓存操作</li>
+									        <li>新增表格参数（导出方式&导出文件类型）</li>
+									        <li>新增表格示例（自定义视图分页）</li>
+									        <li>新增示例（表格列拖拽）</li>
+									        <li>集成yuicompressor实现(CSS/JS压缩)</li>
+									        <li>新增表格参数（是否支持打印页面showPrint）</li>
+									        <li>支持bat脚本执行应用</li>
+									        <li>修复存在的SQL注入漏洞问题</li>
+									        <li>定时任务屏蔽rmi远程调用</li>
+									        <li>导出Excel文件支持数据流下载方式</li>
+									        <li>实例演示弹层组件增加相册层示例</li>
+									        <li>删除操作日志记录信息</li>
+									        <li>增加表格重置分页的参数</li>
+									        <li>限制超级管理员不允许操作</li>
+									        <li>树级结构更新子节点使用replaceFirst</li>
+									        <li>支持动态生成密匙，防止默认密钥泄露</li>
+									        <li>升级pagehelper到最新版1.3.1</li>
+									        <li>升级oshi到最新版本v5.7.4</li>
+									        <li>升级swagger到最新版本v3.0.0</li>
+									        <li>升级commons.io到最新版本v2.10.0</li>
+									        <li>升级commons.fileupload到最新版本v1.4</li>
+									        <li>升级bootstrap-table到最新版本v1.18.3</li>
+									        <li>升级druid到最新版本v1.2.6</li>
+									        <li>升级fastjson到最新版1.2.76</li>
+									        <li>升级layui到最新版本v2.6.6</li>
+									        <li>升级layer到最新版本v3.5.0</li>
+									        <li>升级laydate到最新版本v5.3.0</li>
+									        <li>优化表格树移动端&边框显示</li>
+									        <li>新增表格刷新options配置方法</li>
+									        <li>优化图片工具类读取文件，防止异常</li>
+									        <li>修复表格图片预览移动端宽高无效问题</li>
+									        <li>主子表通用操作封装处理增加文本域类型</li>
+									        <li>日志注解兼容获取json类型的参数</li>
+									        <li>修复表单向导插件有滚动条时底部工具栏无法固定问题</li>
+									        <li>修复导出角色数据范围翻译缺少仅本人</li>
+									        <li>修正Velocity模板初始字符集</li>
+									        <li>升级mybatis到最新版3.5.6 阻止远程代码执行漏洞</li>
+									        <li>优化代码生成导出模板名称</li>
+									        <li>修改个人中心密码长度提醒</li>
+									        <li>实例演示中弹出表格增加以回调形式回显到父窗体</li>
+									        <li>修复登录页面弹窗文字不显示的问题</li>
+									        <li>其他细节优化</li>
+										</ol>
+									</div>
+								</div>
+							</div>
+                            <div class="panel panel-default">
+								<div class="panel-heading">
+								   <h5 class="panel-title">
+									   <a data-toggle="collapse" data-parent="#version" href="#v461">v4.6.1</a><code class="pull-right">2021.04.12</code>
+								   </h5>
+								</div>
+								<div id="v461" class="panel-collapse collapse">
+									<div class="panel-body">
+									   <ol>
+									        <li>新增IE浏览器版本过低提示页面</li>
+									        <li>新增详细信息tab页签方式</li>
+									        <li>新增解锁屏幕打开上次页签</li>
+									        <li>数据监控默认账户密码防止越权访问</li>
+									        <li>新增表格示例（导出选择列）</li>
+									        <li>个人信息添加手机&邮箱重复验证</li>
+									        <li>个人中心刷新后样式问题</li>
+									        <li>操作日志返回参数添加非空验证</li>
+									        <li>velocity剔除commons-collections版本，防止3.2.1版本的反序列化漏洞</li>
+									        <li>子表模板默认日期格式化</li>
+									        <li>代码生成预览语言根据后缀名高亮显示</li>
+									        <li>代码生成主子表相同字段导致数据问题</li>
+									        <li>升级SpringBoot到最新版本2.2.13</li>
+									        <li>升级shiro到最新版1.7.1 阻止身份认证绕过漏洞</li>
+									        <li>升级bootstrapTable到最新版本v1.18.2</li>
+									        <li>升级bootstrapTable相关组件到最新版本v1.18.2</li>
+									        <li>升级fastjson到最新版1.2.75</li>
+									        <li>升级druid到最新版本v1.2.4</li>
+									        <li>升级oshi到最新版本v5.6.0</li>
+									        <li>修改ip字段长度防止ipv6地址长度不够</li>
+									        <li>搜索建议示例选择后隐藏列表</li>
+									        <li>主子表示例增加初始化数据</li>
+									        <li>优化Excel导入增加空行判断</li>
+									        <li>修复横向菜单无法打开页签问题</li>
+									        <li>修复导入数据为负浮点数时，导入结果会丢失精度问题</li>
+									        <li>优化更多操作按钮左侧移入内容闪现消失情况</li>
+									        <li>修复主子表提交中列隐藏后出现列偏移问题</li>
+									        <li>单据打印网页时通过hidden-print隐藏元素</li>
+									        <li>表格销毁清除记住选择数据</li>
+									        <li>增加表格动态列示例</li>
+									        <li>代码生成选择主子表关联元素必填</li>
+									        <li>tree根据Id和Name选中指定节点增加空判断</li>
+									        <li>其他细节优化</li>
+										</ol>
+									</div>
+								</div>
+							</div>
+                            <div class="panel panel-default">
+								<div class="panel-heading">
+								   <h5 class="panel-title">
+									   <a data-toggle="collapse" data-parent="#version" href="#v46">v4.6.0</a><code class="pull-right">2021.01.01</code>
+								   </h5>
+								</div>
+								<div id="v46" class="panel-collapse collapse">
+									<div class="panel-body">
+									   <ol>
+									        <li>新增缓存监控管理</li>
+									        <li>新增锁定屏幕功能</li>
+									        <li>菜单新增是否刷新页面</li>
+									        <li>删除用户和角色解绑关联</li>
+									        <li>新增密码强度字符范围提示</li>
+									        <li>防止匿名访问进行过滤</li>
+									        <li>升级SpringBoot到最新版本2.2.12</li>
+									        <li>升级poi到最新版本4.1.2</li>
+									        <li>升级bitwalker到最新版本1.21</li>
+									        <li>升级bootstrap-fileinput到最新版本5.1.3</li>
+									        <li>升级bootstrapTable到最新版本v1.18.0</li>
+									        <li>升级bootstrapTable相关组件到最新版本v1.18.0</li>
+									        <li>升级oshi到最新版本v5.3.6</li>
+									        <li>新增示例（标签 & 提示）</li>
+									        <li>添加单据打印示例</li>
+									        <li>修改表格初始参数sortName默认值为undefined</li>
+									        <li>新增表格参数（自定义打印页面模板printPageBuilder）</li>
+									        <li>新增表格参数（是否显示行间隔色striped）</li>
+									        <li>新增表格参数（渲染完成后执行的事件onPostBody）</li>
+									        <li>Excel注解支持Image图片导出</li>
+									        <li>Excel支持注解align对齐方式</li>
+									        <li>Excel支持导入Boolean型数据</li>
+									        <li>主子表操作添加通用addColumn方法</li>
+									        <li>代码生成日期控件区分范围</li>
+									        <li>代码生成数据库文本类型生成表单文本域</li>
+									        <li>修复生成主子表外键名错误</li>
+									        <li>选项卡新增是否刷新属性</li>
+									        <li>修复树表格表头跟表格宽度不同步的问题</li>
+									        <li>表格树加载完成触发tooltip方法</li>
+									        <li>使用widthUnit定义树表格选项单位</li>
+									        <li>修复主子表editColumn序列问题</li>
+									        <li>修复添加全屏在无参数时没有替换url参数问题</li>
+									        <li>弹出层openOptions移动端自适应</li>
+									        <li>防止错误页返回主页出现嵌套问题</li>
+									        <li>设置回显数据字典验证防止空值</li>
+									        <li>其他细节优化</li>
+										</ol>
+									</div>
+								</div>
+							</div>
+                            <div class="panel panel-default">
+								<div class="panel-heading">
+								   <h5 class="panel-title">
 									   <a data-toggle="collapse" data-parent="#version" href="#v451">v4.5.1</a><code class="pull-right">2020.11.18</code>
 								   </h5>
 								</div>
-								<div id="v451" class="panel-collapse collapse in">
+								<div id="v451" class="panel-collapse collapse">
 									<div class="panel-body">
 									   <ol>
 									        <li>阻止任意文件下载漏洞</li>

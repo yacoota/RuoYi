@@ -19,7 +19,6 @@ import com.ruoyi.common.core.domain.Ztree;
 import com.ruoyi.common.core.domain.entity.SysDictType;
 import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.common.enums.BusinessType;
-import com.ruoyi.common.utils.ShiroUtils;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.system.service.ISysDictTypeService;
 
@@ -88,13 +87,14 @@ public class SysDictTypeController extends BaseController
         {
             return error("新增字典'" + dict.getDictName() + "'失败，字典类型已存在");
         }
-        dict.setCreateBy(ShiroUtils.getLoginName());
+        dict.setCreateBy(getLoginName());
         return toAjax(dictTypeService.insertDictType(dict));
     }
 
     /**
      * 修改字典类型
      */
+    @RequiresPermissions("system:dict:edit")
     @GetMapping("/edit/{dictId}")
     public String edit(@PathVariable("dictId") Long dictId, ModelMap mmap)
     {
@@ -115,7 +115,7 @@ public class SysDictTypeController extends BaseController
         {
             return error("修改字典'" + dict.getDictName() + "'失败，字典类型已存在");
         }
-        dict.setUpdateBy(ShiroUtils.getLoginName());
+        dict.setUpdateBy(getLoginName());
         return toAjax(dictTypeService.updateDictType(dict));
     }
 
@@ -125,19 +125,20 @@ public class SysDictTypeController extends BaseController
     @ResponseBody
     public AjaxResult remove(String ids)
     {
-        return toAjax(dictTypeService.deleteDictTypeByIds(ids));
+        dictTypeService.deleteDictTypeByIds(ids);
+        return success();
     }
 
     /**
-     * 清空缓存
+     * 刷新字典缓存
      */
     @RequiresPermissions("system:dict:remove")
     @Log(title = "字典类型", businessType = BusinessType.CLEAN)
-    @GetMapping("/clearCache")
+    @GetMapping("/refreshCache")
     @ResponseBody
-    public AjaxResult clearCache()
+    public AjaxResult refreshCache()
     {
-        dictTypeService.clearCache();
+        dictTypeService.resetDictCache();
         return success();
     }
 

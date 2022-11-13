@@ -13,13 +13,16 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.config.RuoYiConfig;
+import com.ruoyi.common.constant.UserConstants;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.domain.entity.SysUser;
 import com.ruoyi.common.enums.BusinessType;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.ShiroUtils;
+import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.file.FileUploadUtils;
+import com.ruoyi.common.utils.file.MimeTypeUtils;
 import com.ruoyi.framework.shiro.service.SysPasswordService;
 import com.ruoyi.system.service.ISysUserService;
 
@@ -48,7 +51,7 @@ public class SysProfileController extends BaseController
     @GetMapping()
     public String profile(ModelMap mmap)
     {
-        SysUser user = ShiroUtils.getSysUser();
+        SysUser user = getSysUser();
         mmap.put("user", user);
         mmap.put("roleGroup", userService.selectUserRoleGroup(user.getUserId()));
         mmap.put("postGroup", userService.selectUserPostGroup(user.getUserId()));
@@ -59,7 +62,7 @@ public class SysProfileController extends BaseController
     @ResponseBody
     public boolean checkPassword(String password)
     {
-        SysUser user = ShiroUtils.getSysUser();
+        SysUser user = getSysUser();
         if (passwordService.matches(user, password))
         {
             return true;
@@ -70,7 +73,7 @@ public class SysProfileController extends BaseController
     @GetMapping("/resetPwd")
     public String resetPwd(ModelMap mmap)
     {
-        SysUser user = ShiroUtils.getSysUser();
+        SysUser user = getSysUser();
         mmap.put("user", userService.selectUserById(user.getUserId()));
         return prefix + "/resetPwd";
     }
@@ -80,7 +83,7 @@ public class SysProfileController extends BaseController
     @ResponseBody
     public AjaxResult resetPwd(String oldPassword, String newPassword)
     {
-        SysUser user = ShiroUtils.getSysUser();
+        SysUser user = getSysUser();
         if (!passwordService.matches(user, oldPassword))
         {
             return error("修改密码失败，旧密码错误");
@@ -94,7 +97,7 @@ public class SysProfileController extends BaseController
         user.setPwdUpdateDate(DateUtils.getNowDate());
         if (userService.resetUserPwd(user) > 0)
         {
-            ShiroUtils.setSysUser(userService.selectUserById(user.getUserId()));
+            setSysUser(userService.selectUserById(user.getUserId()));
             return success();
         }
         return error("修改密码异常，请联系管理员");
@@ -106,7 +109,7 @@ public class SysProfileController extends BaseController
     @GetMapping("/edit")
     public String edit(ModelMap mmap)
     {
-        SysUser user = ShiroUtils.getSysUser();
+        SysUser user = getSysUser();
         mmap.put("user", userService.selectUserById(user.getUserId()));
         return prefix + "/edit";
     }
@@ -117,7 +120,7 @@ public class SysProfileController extends BaseController
     @GetMapping("/avatar")
     public String avatar(ModelMap mmap)
     {
-        SysUser user = ShiroUtils.getSysUser();
+        SysUser user = getSysUser();
         mmap.put("user", userService.selectUserById(user.getUserId()));
         return prefix + "/avatar";
     }
@@ -130,14 +133,24 @@ public class SysProfileController extends BaseController
     @ResponseBody
     public AjaxResult update(SysUser user)
     {
-        SysUser currentUser = ShiroUtils.getSysUser();
+        SysUser currentUser = getSysUser();
         currentUser.setUserName(user.getUserName());
         currentUser.setEmail(user.getEmail());
         currentUser.setPhonenumber(user.getPhonenumber());
         currentUser.setSex(user.getSex());
+        if (StringUtils.isNotEmpty(user.getPhonenumber())
+                && UserConstants.USER_PHONE_NOT_UNIQUE.equals(userService.checkPhoneUnique(currentUser)))
+        {
+            return error("修改用户'" + currentUser.getLoginName() + "'失败，手机号码已存在");
+        }
+        else if (StringUtils.isNotEmpty(user.getEmail())
+                && UserConstants.USER_EMAIL_NOT_UNIQUE.equals(userService.checkEmailUnique(currentUser)))
+        {
+            return error("修改用户'" + currentUser.getLoginName() + "'失败，邮箱账号已存在");
+        }
         if (userService.updateUserInfo(currentUser) > 0)
         {
-            ShiroUtils.setSysUser(userService.selectUserById(currentUser.getUserId()));
+            setSysUser(userService.selectUserById(currentUser.getUserId()));
             return success();
         }
         return error();
@@ -151,16 +164,16 @@ public class SysProfileController extends BaseController
     @ResponseBody
     public AjaxResult updateAvatar(@RequestParam("avatarfile") MultipartFile file)
     {
-        SysUser currentUser = ShiroUtils.getSysUser();
+        SysUser currentUser = getSysUser();
         try
         {
             if (!file.isEmpty())
             {
-                String avatar = FileUploadUtils.upload(RuoYiConfig.getAvatarPath(), file);
+                String avatar = FileUploadUtils.upload(RuoYiConfig.getAvatarPath(), file, MimeTypeUtils.IMAGE_EXTENSION);
                 currentUser.setAvatar(avatar);
                 if (userService.updateUserInfo(currentUser) > 0)
                 {
-                    ShiroUtils.setSysUser(userService.selectUserById(currentUser.getUserId()));
+                    setSysUser(userService.selectUserById(currentUser.getUserId()));
                     return success();
                 }
             }

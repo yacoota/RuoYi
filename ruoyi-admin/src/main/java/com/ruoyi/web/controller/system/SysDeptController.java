@@ -17,9 +17,7 @@ import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.domain.Ztree;
 import com.ruoyi.common.core.domain.entity.SysDept;
-import com.ruoyi.common.core.domain.entity.SysRole;
 import com.ruoyi.common.enums.BusinessType;
-import com.ruoyi.common.utils.ShiroUtils;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.system.service.ISysDeptService;
 
@@ -59,6 +57,10 @@ public class SysDeptController extends BaseController
     @GetMapping("/add/{parentId}")
     public String add(@PathVariable("parentId") Long parentId, ModelMap mmap)
     {
+        if (!getSysUser().isAdmin())
+        {
+            parentId = getSysUser().getDeptId();
+        }
         mmap.put("dept", deptService.selectDeptById(parentId));
         return prefix + "/add";
     }
@@ -76,16 +78,18 @@ public class SysDeptController extends BaseController
         {
             return error("新增部门'" + dept.getDeptName() + "'失败，部门名称已存在");
         }
-        dept.setCreateBy(ShiroUtils.getLoginName());
+        dept.setCreateBy(getLoginName());
         return toAjax(deptService.insertDept(dept));
     }
 
     /**
-     * 修改
+     * 修改部门
      */
+    @RequiresPermissions("system:dept:edit")
     @GetMapping("/edit/{deptId}")
     public String edit(@PathVariable("deptId") Long deptId, ModelMap mmap)
     {
+        deptService.checkDeptDataScope(deptId);
         SysDept dept = deptService.selectDeptById(deptId);
         if (StringUtils.isNotNull(dept) && 100L == deptId)
         {
@@ -96,7 +100,7 @@ public class SysDeptController extends BaseController
     }
 
     /**
-     * 保存
+     * 修改保存部门
      */
     @Log(title = "部门管理", businessType = BusinessType.UPDATE)
     @RequiresPermissions("system:dept:edit")
@@ -104,20 +108,21 @@ public class SysDeptController extends BaseController
     @ResponseBody
     public AjaxResult editSave(@Validated SysDept dept)
     {
+        Long deptId = dept.getDeptId();
+        deptService.checkDeptDataScope(deptId);
         if (UserConstants.DEPT_NAME_NOT_UNIQUE.equals(deptService.checkDeptNameUnique(dept)))
         {
             return error("修改部门'" + dept.getDeptName() + "'失败，部门名称已存在");
         }
-        else if (dept.getParentId().equals(dept.getDeptId()))
+        else if (dept.getParentId().equals(deptId))
         {
             return error("修改部门'" + dept.getDeptName() + "'失败，上级部门不能是自己");
         }
-        else if (StringUtils.equals(UserConstants.DEPT_DISABLE, dept.getStatus())
-                && deptService.selectNormalChildrenDeptById(dept.getDeptId()) > 0)
+        else if (StringUtils.equals(UserConstants.DEPT_DISABLE, dept.getStatus()) && deptService.selectNormalChildrenDeptById(deptId) > 0)
         {
             return AjaxResult.error("该部门包含未停用的子部门！");
         }
-        dept.setUpdateBy(ShiroUtils.getLoginName());
+        dept.setUpdateBy(getLoginName());
         return toAjax(deptService.updateDept(dept));
     }
 
@@ -138,6 +143,7 @@ public class SysDeptController extends BaseController
         {
             return AjaxResult.warn("部门存在用户,不允许删除");
         }
+        deptService.checkDeptDataScope(deptId);
         return toAjax(deptService.deleteDeptById(deptId));
     }
 
@@ -159,22 +165,11 @@ public class SysDeptController extends BaseController
      */
     @GetMapping(value = { "/selectDeptTree/{deptId}", "/selectDeptTree/{deptId}/{excludeId}" })
     public String selectDeptTree(@PathVariable("deptId") Long deptId,
-            @PathVariable(value = "excludeId", required = false) String excludeId, ModelMap mmap)
+            @PathVariable(value = "excludeId", required = false) Long excludeId, ModelMap mmap)
     {
         mmap.put("dept", deptService.selectDeptById(deptId));
         mmap.put("excludeId", excludeId);
         return prefix + "/tree";
-    }
-
-    /**
-     * 加载部门列表树
-     */
-    @GetMapping("/treeData")
-    @ResponseBody
-    public List<Ztree> treeData()
-    {
-        List<Ztree> ztrees = deptService.selectDeptTree(new SysDept());
-        return ztrees;
     }
 
     /**
@@ -185,19 +180,8 @@ public class SysDeptController extends BaseController
     public List<Ztree> treeDataExcludeChild(@PathVariable(value = "excludeId", required = false) Long excludeId)
     {
         SysDept dept = new SysDept();
-        dept.setDeptId(excludeId);
+        dept.setExcludeId(excludeId);
         List<Ztree> ztrees = deptService.selectDeptTreeExcludeChild(dept);
-        return ztrees;
-    }
-
-    /**
-     * 加载角色部门（数据权限）列表树
-     */
-    @GetMapping("/roleDeptTreeData")
-    @ResponseBody
-    public List<Ztree> deptTreeData(SysRole role)
-    {
-        List<Ztree> ztrees = deptService.roleDeptTreeData(role);
         return ztrees;
     }
 }

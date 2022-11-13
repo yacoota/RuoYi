@@ -30,14 +30,14 @@ function login() {
             "rememberMe": rememberMe
         },
         success: function(r) {
-            if (r.code == 0) {
+            if (r.code == web_status.SUCCESS) {
                 location.href = ctx + 'index';
             } else {
-            	$.modal.closeLoading();
             	$('.imgcode').click();
             	$(".code").val("");
             	$.modal.msg(r.msg);
             }
+            $.modal.closeLoading();
         }
     });
 }
@@ -76,11 +76,11 @@ function validateKickout() {
             if (top != self) {
                 top.location = self.location;
             } else {
-                var url  =  location.search;
+                var url = location.search;
                 if (url) {
-                    var oldUrl  = window.location.href;
-                    var newUrl  = oldUrl.substring(0,  oldUrl.indexOf('?'));
-                    self.location  = newUrl;
+                    var oldUrl = window.location.href;
+                    var newUrl = oldUrl.substring(0, oldUrl.indexOf('?'));
+                    self.location = newUrl;
                 }
             }
         });

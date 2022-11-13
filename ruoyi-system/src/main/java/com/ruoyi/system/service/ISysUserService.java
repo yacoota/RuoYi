@@ -143,10 +143,10 @@ public interface ISysUserService
     /**
      * 校验用户名称是否唯一
      * 
-     * @param loginName 登录名称
+     * @param user 用户信息
      * @return 结果
      */
-    public String checkLoginNameUnique(String loginName);
+    public String checkLoginNameUnique(SysUser user);
 
     /**
      * 校验手机号码是否唯一
@@ -170,6 +170,13 @@ public interface ISysUserService
      * @param user 用户信息
      */
     public void checkUserAllowed(SysUser user);
+
+    /**
+     * 校验用户是否有数据权限
+     * 
+     * @param userId 用户id
+     */
+    public void checkUserDataScope(Long userId);
 
     /**
      * 根据用户ID查询用户所属角色组

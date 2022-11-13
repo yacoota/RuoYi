@@ -19,7 +19,7 @@ public interface SysUserMapper
     public List<SysUser> selectUserList(SysUser sysUser);
 
     /**
-     * 根据条件分页查询未已配用户角色列表
+     * 根据条件分页查询已配用户角色列表
      * 
      * @param user 用户信息
      * @return 用户信息集合信息
@@ -104,7 +104,7 @@ public interface SysUserMapper
      * @param loginName 登录名称
      * @return 结果
      */
-    public int checkLoginNameUnique(String loginName);
+    public SysUser checkLoginNameUnique(String loginName);
 
     /**
      * 校验手机号码是否唯一

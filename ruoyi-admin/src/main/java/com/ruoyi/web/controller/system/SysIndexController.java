@@ -21,7 +21,6 @@ import com.ruoyi.common.core.text.Convert;
 import com.ruoyi.common.utils.CookieUtils;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.ServletUtils;
-import com.ruoyi.common.utils.ShiroUtils;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.framework.shiro.service.SysPasswordService;
 import com.ruoyi.system.service.ISysConfigService;
@@ -49,18 +48,23 @@ public class SysIndexController extends BaseController
     public String index(ModelMap mmap)
     {
         // 取身份信息
-        SysUser user = ShiroUtils.getSysUser();
+        SysUser user = getSysUser();
         // 根据用户id取出菜单
         List<SysMenu> menus = menuService.selectMenusByUser(user);
         mmap.put("menus", menus);
         mmap.put("user", user);
         mmap.put("sideTheme", configService.selectConfigByKey("sys.index.sideTheme"));
         mmap.put("skinName", configService.selectConfigByKey("sys.index.skinName"));
-        mmap.put("ignoreFooter", configService.selectConfigByKey("sys.index.ignoreFooter"));
+        Boolean footer = Convert.toBool(configService.selectConfigByKey("sys.index.footer"), true);
+        Boolean tagsView = Convert.toBool(configService.selectConfigByKey("sys.index.tagsView"), true);
+        mmap.put("footer", footer);
+        mmap.put("tagsView", tagsView);
+        mmap.put("mainClass", contentMainClass(footer, tagsView));
         mmap.put("copyrightYear", RuoYiConfig.getCopyrightYear());
         mmap.put("demoEnabled", RuoYiConfig.isDemoEnabled());
         mmap.put("isDefaultModifyPwd", initPasswordIsModify(user.getPwdUpdateDate()));
         mmap.put("isPasswordExpired", passwordIsExpiration(user.getPwdUpdateDate()));
+        mmap.put("isMobile", ServletUtils.checkAgentIsMobile(ServletUtils.getRequest().getHeader("User-Agent")));
 
         // 菜单导航显示风格
         String menuStyle = configService.selectConfigByKey("sys.index.menuStyle");
@@ -85,7 +89,7 @@ public class SysIndexController extends BaseController
     @GetMapping("/lockscreen")
     public String lockscreen(ModelMap mmap)
     {
-        mmap.put("user", ShiroUtils.getSysUser());
+        mmap.put("user", getSysUser());
         ServletUtils.getSession().setAttribute(ShiroConstants.LOCK_SCREEN, true);
         return "lock";
     }
@@ -95,10 +99,10 @@ public class SysIndexController extends BaseController
     @ResponseBody
     public AjaxResult unlockscreen(String password)
     {
-        SysUser user = ShiroUtils.getSysUser();
+        SysUser user = getSysUser();
         if (StringUtils.isNull(user))
         {
-            return AjaxResult.error("服务器超时，请重新登陆");
+            return AjaxResult.error("服务器超时，请重新登录");
         }
         if (passwordService.matches(user, password))
         {
@@ -128,6 +132,24 @@ public class SysIndexController extends BaseController
     {
         mmap.put("version", RuoYiConfig.getVersion());
         return "main";
+    }
+
+    // content-main class
+    public String contentMainClass(Boolean footer, Boolean tagsView)
+    {
+        if (!footer && !tagsView)
+        {
+            return "tagsview-footer-hide";
+        }
+        else if (!footer)
+        {
+            return "footer-hide";
+        }
+        else if (!tagsView)
+        {
+            return "tagsview-hide";
+        }
+        return StringUtils.EMPTY;
     }
 
     // 检查初始密码是否提醒修改

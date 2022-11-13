@@ -2,6 +2,7 @@ package com.ruoyi.web.controller.system;
 
 import java.util.List;
 import java.util.stream.Collectors;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -17,14 +18,19 @@ import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.constant.UserConstants;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
+import com.ruoyi.common.core.domain.Ztree;
+import com.ruoyi.common.core.domain.entity.SysDept;
 import com.ruoyi.common.core.domain.entity.SysRole;
 import com.ruoyi.common.core.domain.entity.SysUser;
 import com.ruoyi.common.core.page.TableDataInfo;
+import com.ruoyi.common.core.text.Convert;
 import com.ruoyi.common.enums.BusinessType;
 import com.ruoyi.common.utils.ShiroUtils;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.framework.shiro.service.SysPasswordService;
+import com.ruoyi.framework.shiro.util.AuthorizationUtils;
+import com.ruoyi.system.service.ISysDeptService;
 import com.ruoyi.system.service.ISysPostService;
 import com.ruoyi.system.service.ISysRoleService;
 import com.ruoyi.system.service.ISysUserService;
@@ -45,6 +51,9 @@ public class SysUserController extends BaseController
 
     @Autowired
     private ISysRoleService roleService;
+    
+    @Autowired
+    private ISysDeptService deptService;
 
     @Autowired
     private ISysPostService postService;
@@ -88,8 +97,7 @@ public class SysUserController extends BaseController
     {
         ExcelUtil<SysUser> util = new ExcelUtil<SysUser>(SysUser.class);
         List<SysUser> userList = util.importExcel(file.getInputStream());
-        String operName = ShiroUtils.getSysUser().getLoginName();
-        String message = userService.importUser(userList, updateSupport, operName);
+        String message = userService.importUser(userList, updateSupport, getLoginName());
         return AjaxResult.success(message);
     }
 
@@ -122,7 +130,7 @@ public class SysUserController extends BaseController
     @ResponseBody
     public AjaxResult addSave(@Validated SysUser user)
     {
-        if (UserConstants.USER_NAME_NOT_UNIQUE.equals(userService.checkLoginNameUnique(user.getLoginName())))
+        if (UserConstants.USER_NAME_NOT_UNIQUE.equals(userService.checkLoginNameUnique(user)))
         {
             return error("新增用户'" + user.getLoginName() + "'失败，登录账号已存在");
         }
@@ -138,16 +146,18 @@ public class SysUserController extends BaseController
         }
         user.setSalt(ShiroUtils.randomSalt());
         user.setPassword(passwordService.encryptPassword(user.getLoginName(), user.getPassword(), user.getSalt()));
-        user.setCreateBy(ShiroUtils.getLoginName());
+        user.setCreateBy(getLoginName());
         return toAjax(userService.insertUser(user));
     }
 
     /**
      * 修改用户
      */
+    @RequiresPermissions("system:user:edit")
     @GetMapping("/edit/{userId}")
     public String edit(@PathVariable("userId") Long userId, ModelMap mmap)
     {
+        userService.checkUserDataScope(userId);
         List<SysRole> roles = roleService.selectRolesByUserId(userId);
         mmap.put("user", userService.selectUserById(userId));
         mmap.put("roles", SysUser.isAdmin(userId) ? roles : roles.stream().filter(r -> !r.isAdmin()).collect(Collectors.toList()));
@@ -165,7 +175,12 @@ public class SysUserController extends BaseController
     public AjaxResult editSave(@Validated SysUser user)
     {
         userService.checkUserAllowed(user);
-        if (StringUtils.isNotEmpty(user.getPhonenumber())
+        userService.checkUserDataScope(user.getUserId());
+        if (UserConstants.USER_NAME_NOT_UNIQUE.equals(userService.checkLoginNameUnique(user)))
+        {
+            return error("修改用户'" + user.getLoginName() + "'失败，登录账号已存在");
+        }
+        else if (StringUtils.isNotEmpty(user.getPhonenumber())
                 && UserConstants.USER_PHONE_NOT_UNIQUE.equals(userService.checkPhoneUnique(user)))
         {
             return error("修改用户'" + user.getLoginName() + "'失败，手机号码已存在");
@@ -175,7 +190,8 @@ public class SysUserController extends BaseController
         {
             return error("修改用户'" + user.getLoginName() + "'失败，邮箱账号已存在");
         }
-        user.setUpdateBy(ShiroUtils.getLoginName());
+        user.setUpdateBy(getLoginName());
+        AuthorizationUtils.clearAllCachedAuthorizationInfo();
         return toAjax(userService.updateUser(user));
     }
 
@@ -194,13 +210,14 @@ public class SysUserController extends BaseController
     public AjaxResult resetPwdSave(SysUser user)
     {
         userService.checkUserAllowed(user);
+        userService.checkUserDataScope(user.getUserId());
         user.setSalt(ShiroUtils.randomSalt());
         user.setPassword(passwordService.encryptPassword(user.getLoginName(), user.getPassword(), user.getSalt()));
         if (userService.resetUserPwd(user) > 0)
         {
             if (ShiroUtils.getUserId().longValue() == user.getUserId().longValue())
             {
-                ShiroUtils.setSysUser(userService.selectUserById(user.getUserId()));
+                setSysUser(userService.selectUserById(user.getUserId()));
             }
             return success();
         }
@@ -224,13 +241,15 @@ public class SysUserController extends BaseController
     /**
      * 用户授权角色
      */
-    @RequiresPermissions("system:user:add")
+    @RequiresPermissions("system:user:edit")
     @Log(title = "用户管理", businessType = BusinessType.GRANT)
     @PostMapping("/authRole/insertAuthRole")
     @ResponseBody
     public AjaxResult insertAuthRole(Long userId, Long[] roleIds)
     {
+        userService.checkUserDataScope(userId);
         userService.insertUserAuth(userId, roleIds);
+        AuthorizationUtils.clearAllCachedAuthorizationInfo();
         return success();
     }
 
@@ -240,6 +259,10 @@ public class SysUserController extends BaseController
     @ResponseBody
     public AjaxResult remove(String ids)
     {
+        if (ArrayUtils.contains(Convert.toLongArray(ids), getUserId()))
+        {
+            return error("当前用户不能删除");
+        }
         return toAjax(userService.deleteUserByIds(ids));
     }
 
@@ -250,7 +273,7 @@ public class SysUserController extends BaseController
     @ResponseBody
     public String checkLoginNameUnique(SysUser user)
     {
-        return userService.checkLoginNameUnique(user.getLoginName());
+        return userService.checkLoginNameUnique(user);
     }
 
     /**
@@ -283,6 +306,32 @@ public class SysUserController extends BaseController
     public AjaxResult changeStatus(SysUser user)
     {
         userService.checkUserAllowed(user);
+        userService.checkUserDataScope(user.getUserId());
         return toAjax(userService.changeStatus(user));
+    }
+
+    /**
+     * 加载部门列表树
+     */
+    @RequiresPermissions("system:user:list")
+    @GetMapping("/deptTreeData")
+    @ResponseBody
+    public List<Ztree> deptTreeData()
+    {
+        List<Ztree> ztrees = deptService.selectDeptTree(new SysDept());
+        return ztrees;
+    }
+
+    /**
+     * 选择部门树
+     * 
+     * @param deptId 部门ID
+     */
+    @RequiresPermissions("system:user:list")
+    @GetMapping("/selectDeptTree/{deptId}")
+    public String selectDeptTree(@PathVariable("deptId") Long deptId, ModelMap mmap)
+    {
+        mmap.put("dept", deptService.selectDeptById(deptId));
+        return prefix + "/deptTree";
     }
 }
